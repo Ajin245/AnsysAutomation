@@ -1,0 +1,142 @@
+{
+  "02": {
+    "F1": {
+      "nominal_forces": {"fx": 0, "fy": 0, "fz": 0},
+      "nominal_moments": {"mx": 0, "my": 0, "mz": 0}
+    },
+    "F2": {
+      "nominal_forces": {"fx": 0, "fy": 210, "fz": 410},
+      "nominal_moments": {"mx": 0, "my": 0, "mz": 0}
+    },
+    "F3": {
+      "nominal_forces": {"fx": 0, "fy": 0, "fz": 0},
+      "nominal_moments": {"mx": 0, "my": 0, "mz": 0}
+    }
+  },
+  "03": {
+    "F1": {
+      "nominal_forces": {"fx": 0, "fy": 0, "fz": 0},
+      "nominal_moments": {"mx": 0, "my": 0, "mz": 0}
+    },
+    "F2": {
+      "nominal_forces": {"fx": 0, "fy": 210, "fz": 410},
+      "nominal_moments": {"mx": 0, "my": 0, "mz": 0}
+    },
+    "F3": {
+      "nominal_forces": {"fx": 0, "fy": 0, "fz": 0},
+      "nominal_moments": {"mx": 0, "my": 0, "mz": 0}
+    }
+  },
+  "04": {
+    "F1": {
+      "nominal_forces": {"fx": 0, "fy": 0, "fz": 0},
+      "nominal_moments": {"mx": 0, "my": 0, "mz": 0}
+    },
+    "F2": {
+      "nominal_forces": {"fx": 0, "fy": 340, "fz": 680},
+      "nominal_moments": {"mx": 0, "my": 0, "mz": 0}
+    },
+    "F3": {
+      "nominal_forces": {"fx": 0, "fy": 0, "fz": 0},
+      "nominal_moments": {"mx": 0, "my": 0, "mz": 0}
+    }
+  },
+  "05": {
+    "F1": {
+      "nominal_forces": {"fx": 0, "fy": 0, "fz": 0},
+      "nominal_moments": {"mx": 0, "my": 0, "mz": 0}
+    },
+    "F2": {
+      "nominal_forces": {"fx": 0, "fy": 500, "fz": 990},
+      "nominal_moments": {"mx": 0, "my": 0, "mz": 0}
+    },
+    "F3": {
+      "nominal_forces": {"fx": 0, "fy": 0, "fz": 0},
+      "nominal_moments": {"mx": 0, "my": 0, "mz": 0}
+    }
+  },
+  "07": {
+    "F1": {
+      "nominal_forces": {"fx": 0, "fy": 0, "fz": 0},
+      "nominal_moments": {"mx": 0, "my": 0, "mz": 0}
+    },
+    "F2": {
+      "nominal_forces": {"fx": 0, "fy": 1120, "fz": 2240},
+      "nominal_moments": {"mx": 0, "my": 0, "mz": 0}
+    },
+    "F3": {
+      "nominal_forces": {"fx": 0, "fy": 0, "fz": 0},
+      "nominal_moments": {"mx": 0, "my": 0, "mz": 0}
+    }
+  },
+  "08": {
+    "F1": {
+      "nominal_forces": {"fx": 0, "fy": 0, "fz": 0},
+      "nominal_moments": {"mx": 0, "my": 0, "mz": 0}
+    },
+    "F2": {
+      "nominal_forces": {"fx": 0, "fy": 1120, "fz": 2240},
+      "nominal_moments": {"mx": 0, "my": 0, "mz": 0}
+    },
+    "F3": {
+      "nominal_forces": {"fx": 0, "fy": 0, "fz": 0},
+      "nominal_moments": {"mx": 0, "my": 0, "mz": 0}
+    }
+  },
+  "09": {
+    "F1": {
+      "nominal_forces": {"fx": 0, "fy": 0, "fz": 0},
+      "nominal_moments": {"mx": 0, "my": 0, "mz": 0}
+    },
+    "F2": {
+      "nominal_forces": {"fx": 0, "fy": 1750, "fz": 3490},
+      "nominal_moments": {"mx": 0, "my": 0, "mz": 0}
+    },
+    "F3": {
+      "nominal_forces": {"fx": 0, "fy": 0, "fz": 0},
+      "nominal_moments": {"mx": 0, "my": 0, "mz": 0}
+    }
+  },
+  "10": {
+    "F1": {
+      "nominal_forces": {"fx": 0, "fy": 0, "fz": 0},
+      "nominal_moments": {"mx": 0, "my": 0, "mz": 0}
+    },
+    "F2": {
+      "nominal_forces": {"fx": 0, "fy": 2910, "fz": 5820},
+      "nominal_moments": {"mx": 0, "my": 0, "mz": 0}
+    },
+    "F3": {
+      "nominal_forces": {"fx": 0, "fy": 0, "fz": 0},
+      "nominal_moments": {"mx": 0, "my": 0, "mz": 0}
+    }
+  },
+  "11": {
+    "F1": {
+      "nominal_forces": {"fx": 0, "fy": 0, "fz": 0},
+      "nominal_moments": {"mx": 0, "my": 0, "mz": 0}
+    },
+    "F2": {
+      "nominal_forces": {"fx": 0, "fy": 5820, "fz": 11630},
+      "nominal_moments": {"mx": 0, "my": 0, "mz": 0}
+    },
+    "F3": {
+      "nominal_forces": {"fx": 0, "fy": 0, "fz": 0},
+      "nominal_moments": {"mx": 0, "my": 0, "mz": 0}
+    }
+  },
+  "12": {
+    "F1": {
+      "nominal_forces": {"fx": 0, "fy": 0, "fz": 0},
+      "nominal_moments": {"mx": 0, "my": 0, "mz": 0}
+    },
+    "F2": {
+      "nominal_forces": {"fx": 0, "fy": 5820, "fz": 11630},
+      "nominal_moments": {"mx": 0, "my": 0, "mz": 0}
+    },
+    "F3": {
+      "nominal_forces": {"fx": 0, "fy": 0, "fz": 0},
+      "nominal_moments": {"mx": 0, "my": 0, "mz": 0}
+    }
+  }
+}
