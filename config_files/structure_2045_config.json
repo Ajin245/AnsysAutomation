@@ -1,0 +1,25 @@
+{
+  "description": "Structure type 2045 configuration - Example of different boundary conditions and loads",
+  "boundary_conditions_config": [
+    {
+      "type": "fixed_support",
+      "named_selection": "gu_fixed"
+    },
+    {
+      "type": "frictionless_support",
+      "named_selection": "gu_frictionless"
+    }
+  ],
+  "loads_config": [
+    {
+      "type": "force",
+      "named_selection": "gu_force",
+      "use_database": true
+    },
+    {
+      "type": "moment",
+      "named_selection": "gu_moment",
+      "use_database": true
+    }
+  ]
+}

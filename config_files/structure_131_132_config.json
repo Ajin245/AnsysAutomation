@@ -1,0 +1,24 @@
+{
+  "description": "Structure type 131/132 configuration",
+  "boundary_conditions_config": [
+    {
+      "type": "fixed_support",
+      "named_selection": "gu_fixed"
+    },
+    {
+      "type": "rotation_constraint",
+      "named_selection": "gu_remote_disp"
+    }
+  ],
+  "loads_config": [
+    {
+      "type": "force",
+      "named_selection": "gu_force",
+      "use_database": true
+    },
+    {
+      "type": "bolt_pretension",
+      "automatic": true
+    }
+  ]
+}
