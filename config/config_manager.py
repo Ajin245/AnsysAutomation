@@ -6,7 +6,7 @@ Project configuration manager with hierarchy support
 import System
 from System.IO import File, StreamReader
 
-from utils.json_parser import load_json_file, parse_json
+from utils.json_parser import load_json_file
 from utils.validators import validate_file_exists, validate_required_keys
 from .paths import CONFIG_PATH, get_config_file_path, get_structure_config_path
 from .constants import DEFAULT_SETTINGS, REQUIRED_KEYS
