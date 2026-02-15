@@ -3,6 +3,8 @@
 Analysis setup manager for ANSYS Automation
 """
 
+from utils.ansys_lookup import get_single_object_by_name
+
 class AnalysisManager:
     """Analysis setup manager"""
     
@@ -14,7 +16,7 @@ class AnalysisManager:
     
     def setup_analysis(self, scenario_name="standard_sequence", has_bolts=False):
         """Setup analysis parameters"""
-        analysis_settings = DataModel.GetObjectsByName("Analysis Settings")[0]
+        analysis_settings = get_single_object_by_name("Analysis Settings", "analysis setup")
         scenario = self.analysis_scenarios[scenario_name]
         
         analysis_settings.NumberOfSteps = scenario["steps"]
