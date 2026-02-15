@@ -40,6 +40,14 @@
     "diameter": 36,
     "pretension": 45045
   },
+  "42": {
+    "diameter": 42,
+    "pretension": 57915
+  },
+  "48": {
+    "diameter": 48,
+    "pretension": 61937
+  },
   "default": {
     "diameter": 6,
     "pretension": 1351
