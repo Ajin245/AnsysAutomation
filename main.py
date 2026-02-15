@@ -23,6 +23,7 @@ from managers.results_manager import ResultsManager
 from config.config_manager import ConfigurationManager
 from config.paths import validate_config_path, get_all_config_files
 from config.constants import DEFAULT_SETTINGS
+from utils.ansys_lookup import get_single_object_by_name, get_first_analysis
 
 class AnsysAutomationApp:
     """Main application class for ANSYS Automation"""
@@ -141,6 +142,12 @@ class AnsysAutomationApp:
             else:
                 print("   Named Selections validation passed")
             
+            # Early check for critical system objects
+            required_objects = ["Analysis Settings", "Solution", "Solution Information"]
+            for object_name in required_objects:
+                get_single_object_by_name(object_name, "validation before setup")
+            print("   Critical ANSYS objects validation passed")
+
             # Validate model structure
             print("   Model structure validation passed")
             
@@ -181,7 +188,7 @@ class AnsysAutomationApp:
             
             # Step 10: Setup analysis
             print("10. Setting up analysis...")
-            analysis = Model.Analyses[0]
+            analysis = get_first_analysis("analysis setup")
             has_bolts = self.bolt_manager.has_bolts()
             
             self.analysis_manager.setup_analysis("standard_sequence", has_bolts)
