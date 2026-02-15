@@ -122,7 +122,7 @@ class AnsysAutomationApp:
     def _initialize_managers(self):
         """Initialize all manager classes"""
         self.ns_manager = NamedSelectionManager(self.project_settings)
-        self.execution_manager = ExecutionManager(self.project_settings, self.load_database)
+        self.execution_manager = ExecutionManager(self.project_settings, self.load_database, self.analysis_scenarios)
         self.mesh_manager = MeshManager(self.mesh_config, self.project_settings)
         self.analysis_manager = AnalysisManager(self.project_settings, self.analysis_scenarios, self.ns_manager)
         self.bolt_manager = BoltManager(self.bolt_database, self.project_settings, self.ns_manager)
