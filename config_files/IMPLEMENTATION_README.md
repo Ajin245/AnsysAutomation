@@ -128,6 +128,21 @@ Supports both database-driven and static values:
 - **Database-driven** (`use_database: true`): Values from load_database.json
 - **Static values** (`use_database: false`): Values specified in configuration
 
+## Analysis Scenarios Format (`analysis_scenarios.json`)
+
+`load_factors` are now sourced only from `analysis_scenarios` and used uniformly for both load-application branches (legacy + structure-specific `loads_config`).
+
+Required fields per scenario:
+- `steps` (int)
+- `load_factors` (list[float])
+
+Validation rules:
+- `len(load_factors) == steps`.
+- If `has_bolts=True`, solver timeline uses one additional zero step: `time_steps = steps + 1`, `load_factors_shifted = [0] + load_factors`.
+- Shifted factors length must match generated `time_steps` length.
+
+Execution load configuration (`ExecutionManager.get_load_configuration`) contains only force/moment (and optional pressure) values from the load database; scenario factors are not duplicated there.
+
 ## Usage Examples
 
 ### Applying Boundary Conditions and Loads

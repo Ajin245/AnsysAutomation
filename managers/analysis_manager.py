@@ -326,18 +326,43 @@ class AnalysisManager:
             # Fallback to legacy method
             self._apply_loads_legacy(analysis, load_config, scenario_name, has_bolts)
     
+    def _build_load_timeline(self, scenario_name, has_bolts=False):
+        """Build and validate time steps and load factors for scenario."""
+        scenario = self.analysis_scenarios[scenario_name]
+        steps = scenario["steps"]
+        load_factors = scenario.get("load_factors")
+
+        if load_factors is None:
+            raise System.Exception("Scenario has no 'load_factors': " + str(scenario_name))
+
+        expected_factors = steps
+        if len(load_factors) != expected_factors:
+            raise System.Exception(
+                "Scenario '{0}': load_factors length ({1}) must be equal to steps ({2})".format(
+                    scenario_name, len(load_factors), expected_factors
+                )
+            )
+
+        if has_bolts:
+            time_steps = [Quantity(i, "s") for i in range(steps + 1)]
+            load_factors_shifted = [0] + load_factors
+        else:
+            time_steps = [Quantity(i, "s") for i in range(steps)]
+            load_factors_shifted = load_factors
+
+        if len(time_steps) != len(load_factors_shifted):
+            raise System.Exception(
+                "Scenario '{0}': mismatch between time steps ({1}) and load factors ({2}) after bolt-step shift".format(
+                    scenario_name, len(time_steps), len(load_factors_shifted)
+                )
+            )
+
+        return time_steps, load_factors_shifted
+
     def _apply_loads_legacy(self, analysis, load_config, scenario_name, has_bolts=False):
         """Apply loads using legacy configuration format"""
         load_settings = self.project_settings["loads"]
-        scenario = self.analysis_scenarios[scenario_name]
-        
-        # Time steps configuration
-        if has_bolts:
-            time_steps = [Quantity(i, "s") for i in range(scenario["steps"] + 1)]
-            load_factors_shifted = [0] + load_config["load_factors"]
-        else:
-            time_steps = [Quantity(i, "s") for i in range(scenario["steps"])]
-            load_factors_shifted = load_config["load_factors"]
+        time_steps, load_factors_shifted = self._build_load_timeline(scenario_name, has_bolts)
         
         # Force load
         if load_settings.get("force"):
@@ -387,17 +412,10 @@ class AnalysisManager:
     def _apply_loads_from_config(self, analysis, load_config, scenario_name, has_bolts=False):
         """Apply loads from structure-specific configuration"""
         loads_config_list = self.project_settings["loads_config"]
-        scenario = self.analysis_scenarios[scenario_name]
-        
+
         print("   Applying loads from structure-specific config...")
-        
-        # Time steps configuration
-        if has_bolts:
-            time_steps = [Quantity(i, "s") for i in range(scenario["steps"] + 1)]
-            load_factors_shifted = [0] + scenario["load_factors"]
-        else:
-            time_steps = [Quantity(i, "s") for i in range(scenario["steps"])]
-            load_factors_shifted = scenario["load_factors"]
+
+        time_steps, load_factors_shifted = self._build_load_timeline(scenario_name, has_bolts)
         
         for load_def in loads_config_list:
             load_type = load_def.get("type")
