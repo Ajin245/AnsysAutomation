@@ -4,6 +4,7 @@ Results setup manager for ANSYS Automation
 """
 
 from utils.pattern_matching import simple_pattern_match
+from utils.ansys_lookup import get_single_object_by_name
 
 class ResultsManager:
     """Results setup manager"""
@@ -14,7 +15,7 @@ class ResultsManager:
     
     def setup_results(self):
         """Setup result sections"""
-        solution_info = DataModel.GetObjectsByName("Solution Information")[0]
+        solution_info = get_single_object_by_name("Solution Information", "results setup")
         solution_info.NewtonRaphsonResiduals = 4
         solution_info.IdentifyElementViolations = 4
         
@@ -51,7 +52,7 @@ class ResultsManager:
     
     def _create_stress_result(self, ns):
         """Create stress results for Named Selection"""
-        solution = DataModel.GetObjectsByName("Solution")[0]
+        solution = get_single_object_by_name("Solution", "stress result creation")
         
         if "shov" in ns.Name:
             shear_stress = solution.AddMaximumShearStress()

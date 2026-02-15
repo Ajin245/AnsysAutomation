@@ -9,9 +9,10 @@ from utils.validators import validate_execution_type
 class ExecutionManager:
     """Execution type manager"""
     
-    def __init__(self, project_settings, load_database):
+    def __init__(self, project_settings, load_database, analysis_scenarios):
         self.project_settings = project_settings
         self.load_database = load_database
+        self.analysis_scenarios = analysis_scenarios
     
     def determine_execution_type(self):
         """
@@ -95,8 +96,7 @@ class ExecutionManager:
             "execution_number": execution_number,
             "load_group": load_group,
             "forces": load_case["nominal_forces"],
-            "moments": load_case.get("nominal_moments", {"mx": 0, "my": 0, "mz": 0}),
-            "load_factors": self._get_load_factors()
+            "moments": load_case.get("nominal_moments", {"mx": 0, "my": 0, "mz": 0})
         }
         
         # Add pressure if specified in load case
@@ -115,16 +115,15 @@ class ExecutionManager:
         Returns:
             list: Load factors
         """
-        # This would typically come from analysis_scenarios config
-        # For now, return standard sequence factors
-        standard_factors = {
-            "standard_sequence": [0.5, 1.0, 1.5],
-            "quick_check": [0, 1.5],
-            "detailed_analysis": [0, 0.2, 0.5, 0.8, 1.0, 1.5],
-            "pretension_only": [0]
-        }
-        
-        return standard_factors.get(scenario_name, [0.5, 1.0, 1.5])
+        scenario = self.analysis_scenarios.get(scenario_name)
+        if not scenario:
+            raise System.Exception("Analysis scenario not found: " + str(scenario_name))
+
+        load_factors = scenario.get("load_factors")
+        if load_factors is None:
+            raise System.Exception("Scenario has no 'load_factors': " + str(scenario_name))
+
+        return load_factors
     
     def get_available_executions(self):
         """
