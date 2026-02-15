@@ -8,7 +8,7 @@ from System.IO import File, StreamReader
 
 from utils.json_parser import load_json_file
 from utils.validators import validate_file_exists, validate_required_keys
-from .paths import CONFIG_PATH, get_config_file_path, get_structure_config_path
+from .paths import CONFIG_PATH, get_config_file_path, get_structure_config_path, validate_config_path
 from .constants import DEFAULT_SETTINGS, REQUIRED_KEYS
 
 class ConfigurationManager:
@@ -22,6 +22,7 @@ class ConfigurationManager:
             config_path (str): Optional custom configuration path
         """
         self.config_path = config_path or CONFIG_PATH
+        validate_config_path(self.config_path)
     
     def load_config(self, file_path):
         """
@@ -72,32 +73,32 @@ class ConfigurationManager:
     
     def load_project_settings(self):
         """Load main project settings"""
-        file_path = get_config_file_path("project_settings.json")
+        file_path = get_config_file_path("project_settings.json", config_path=self.config_path)
         return self.load_config(file_path)
     
     def load_mesh_config(self):
         """Load mesh configuration"""
-        file_path = get_config_file_path("mesh_config.json")
+        file_path = get_config_file_path("mesh_config.json", config_path=self.config_path)
         return self.load_config(file_path)
     
     def load_load_database(self):
         """Load load database"""
-        file_path = get_config_file_path("load_database.json")
+        file_path = get_config_file_path("load_database.json", config_path=self.config_path)
         return self.load_config(file_path)
     
     def load_analysis_scenarios(self):
         """Load analysis scenarios"""
-        file_path = get_config_file_path("analysis_scenarios.json")
+        file_path = get_config_file_path("analysis_scenarios.json", config_path=self.config_path)
         return self.load_config(file_path)
     
     def load_bolt_database(self):
         """Load bolt database"""
-        file_path = get_config_file_path("bolt_database.json")
+        file_path = get_config_file_path("bolt_database.json", config_path=self.config_path)
         return self.load_config(file_path)
     
     def load_contact_settings(self):
         """Load contact settings"""
-        file_path = get_config_file_path("contact_settings.json")
+        file_path = get_config_file_path("contact_settings.json", config_path=self.config_path)
         return self.load_config(file_path)
     
     def load_all_configs(self):
@@ -126,7 +127,7 @@ class ConfigurationManager:
         Returns:
             dict: Structure configuration or None if not exists
         """
-        structure_config_file = get_structure_config_path(structure_type)
+        structure_config_file = get_structure_config_path(structure_type, config_path=self.config_path)
         if File.Exists(structure_config_file):
             try:
                 return self.load_config(structure_config_file)
@@ -189,12 +190,12 @@ class ConfigurationManager:
             tuple: (bool, list) - (is_valid, list_of_missing_files)
         """
         required_files = [
-            get_config_file_path("project_settings.json"),
-            get_config_file_path("mesh_config.json"), 
-            get_config_file_path("load_database.json"),
-            get_config_file_path("analysis_scenarios.json"),
-            get_config_file_path("bolt_database.json"),
-            get_config_file_path("contact_settings.json")
+            get_config_file_path("project_settings.json", config_path=self.config_path),
+            get_config_file_path("mesh_config.json", config_path=self.config_path), 
+            get_config_file_path("load_database.json", config_path=self.config_path),
+            get_config_file_path("analysis_scenarios.json", config_path=self.config_path),
+            get_config_file_path("bolt_database.json", config_path=self.config_path),
+            get_config_file_path("contact_settings.json", config_path=self.config_path)
         ]
         
         missing_files = []
@@ -203,7 +204,7 @@ class ConfigurationManager:
                 missing_files.append(System.IO.Path.GetFileName(file_path))
         
         # Check for structure-specific config (optional)
-        structure_config_file = get_structure_config_path(structure_type)
+        structure_config_file = get_structure_config_path(structure_type, config_path=self.config_path)
         has_structure_config = File.Exists(structure_config_file)
         
         return len(missing_files) == 0, missing_files, has_structure_config

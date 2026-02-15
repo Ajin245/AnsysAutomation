@@ -130,11 +130,38 @@ run_automated_analysis()
 
 ## Конфигурация
 
-Путь к конфигурационным файлам задается в `config/paths.py`:
+По умолчанию проект ищет JSON-конфиги в директории `config_files/` внутри репозитория.
 
-```python
-CONFIG_PATH = "E:\\User\\Other\\"
+При необходимости путь можно переопределить:
+
+1. Через переменную окружения `ANSYS_AUTOMATION_CONFIG_PATH`
+2. Через параметр `ConfigurationManager(config_path=...)`
+
+### Примеры для разных ОС/сред
+
+**Windows (PowerShell):**
+```powershell
+$env:ANSYS_AUTOMATION_CONFIG_PATH = "C:\work\AnsysAutomation\config_files"
 ```
+
+**Windows (cmd):**
+```cmd
+set ANSYS_AUTOMATION_CONFIG_PATH=C:\work\AnsysAutomation\config_files
+```
+
+**Linux/macOS (bash/zsh):**
+```bash
+export ANSYS_AUTOMATION_CONFIG_PATH="/home/user/AnsysAutomation/config_files"
+```
+
+**Программно в коде:**
+```python
+from config.config_manager import ConfigurationManager
+
+config_manager = ConfigurationManager(config_path=r"D:\custom\configs")
+```
+
+Если путь не существует, будет выброшено исключение с подсказкой, как задать путь через переменную окружения или параметр менеджера.
 
 ## Автор
 
