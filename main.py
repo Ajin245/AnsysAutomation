@@ -28,11 +28,16 @@ from utils.ansys_lookup import get_single_object_by_name, get_first_analysis
 class AnsysAutomationApp:
     """Main application class for ANSYS Automation"""
     
-    def __init__(self):
-        """Initialize the application"""
-        # Get objects from ANSYS global scope at runtime
-        self.model = globals()["Model"]
-        self.data_model_object_category = globals()["DataModelObjectCategory"]
+    def __init__(self, model, data_model_object_category):
+        """
+        Initialize the application
+        
+        Args:
+            model: The ANSYS Mechanical model object
+            data_model_object_category: The DataModelObjectCategory object
+        """
+        self.model = model
+        self.data_model_object_category = data_model_object_category
         
         self.config_manager = None
         self.structure_type = None
@@ -259,17 +264,29 @@ class AnsysAutomationApp:
             return False
 
 # Alternative simplified entry point for backward compatibility
-def run_automated_analysis():
+def run_automated_analysis(model, data_model_object_category):
     """
     Simplified entry point for backward compatibility
+    
+    Args:
+        model: The ANSYS Mechanical model object
+        data_model_object_category: The DataModelObjectCategory object
     """
-    app = AnsysAutomationApp()
+    app = AnsysAutomationApp(model, data_model_object_category)
     return app.run()
 
 # Main execution
 if __name__ == "__main__":
     # This allows the script to be run directly in ANSYS
-    success = run_automated_analysis()
+    # In this context, 'Model' and 'DataModelObjectCategory' are in the global scope
+    try:
+        model_obj = globals()["Model"]
+        dmoc_obj = globals()["DataModelObjectCategory"]
+        success = run_automated_analysis(model_obj, dmoc_obj)
+    except KeyError:
+        print("CRITICAL: Could not find 'Model' or 'DataModelObjectCategory' in the global scope.")
+        print("Please ensure this script is run within the ANSYS Mechanical scripting environment.")
+        success = False
     
     if success:
         print("")
