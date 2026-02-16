@@ -68,16 +68,16 @@ class NamedSelectionManager:
         bc_settings = self.project_settings["boundary_conditions"]
         for bc_type, ns_name in bc_settings.items():
             if ns_name and not self.get_ns_by_name(ns_name):
-                missing_ns.append(f"{bc_type}: {ns_name}")
+                missing_ns.append(str(bc_type) + ": " + str(ns_name))
         
         # Check loads NS
         load_settings = self.project_settings["loads"]
         for load_type, ns_name in load_settings.items():
             if ns_name and not self.get_ns_by_name(ns_name):
-                missing_ns.append(f"{load_type}: {ns_name}")
+                missing_ns.append(str(load_type) + ": " + str(ns_name))
         
         if missing_ns:
-            message = "Missing Named Selections:\n" + "\n".join(f"  - {ns}" for ns in missing_ns)
+            message = "Missing Named Selections:\n" + "\n".join("  - " + str(ns) for ns in missing_ns)
             print("WARNING: " + message)
             return False
         

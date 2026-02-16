@@ -57,7 +57,7 @@ class ExecutionManager:
         if default_execution:
             return default_execution
         
-        raise System.Exception(f"Failed to determine execution type from model name: {geometry_name}")
+        raise System.Exception("Failed to determine execution type from model name: " + str(geometry_name))
     
     def validate_execution(self, execution_type):
         """
@@ -148,6 +148,6 @@ class ExecutionManager:
             System.Exception: If execution number not found
         """
         if execution_number not in self.load_database:
-            raise System.Exception(f"Execution {execution_number} not found in load database")
+            raise System.Exception("Execution " + str(execution_number) + " not found in load database")
         
         return list(self.load_database[execution_number].keys())

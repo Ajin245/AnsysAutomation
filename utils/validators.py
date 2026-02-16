@@ -44,7 +44,7 @@ def validate_required_keys(config_dict, required_keys, context=""):
             missing_keys.append(key)
     
     if missing_keys:
-        error_msg = f"Missing required keys{context}: {', '.join(missing_keys)}"
+        error_msg = "Missing required keys" + str(context) + ": " + ', '.join(missing_keys)
         raise System.Exception(error_msg)
     
     return True
@@ -104,7 +104,7 @@ def validate_mesh_settings(mesh_settings):
     
     for key, settings in mesh_settings.items():
         if not all(k in settings for k in required_mesh_keys):
-            raise System.Exception(f"Invalid mesh settings for '{key}'. Required: {required_mesh_keys}")
+            raise System.Exception("Invalid mesh settings for '" + str(key) + "'. Required: " + str(required_mesh_keys))
     
     return True
 
@@ -126,7 +126,7 @@ def validate_contact_settings(contact_settings):
     for i, rule in enumerate(contact_settings["contact_rules"]):
         missing_keys = [k for k in required_contact_keys if k not in rule]
         if missing_keys:
-            raise System.Exception(f"Contact rule {i} missing keys: {missing_keys}")
+            raise System.Exception("Contact rule " + str(i) + " missing keys: " + str(missing_keys))
     
     return True
 

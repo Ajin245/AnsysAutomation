@@ -48,7 +48,7 @@ class ConfigurationManager:
             return config_data
             
         except Exception as e:
-            raise System.Exception(f"Error loading {file_path}: {str(e)}")
+            raise System.Exception("Error loading " + str(file_path) + ": " + str(e))
     
     def _validate_config_structure(self, file_path, config_data):
         """
@@ -132,7 +132,7 @@ class ConfigurationManager:
             try:
                 return self.load_config(structure_config_file)
             except Exception as e:
-                print(f"Warning: Failed to load structure config for {structure_type}: {str(e)}")
+                print("Warning: Failed to load structure config for " + str(structure_type) + ": " + str(e))
                 return None
         return None
     

@@ -73,19 +73,19 @@ class AnalysisManager:
         for idx, bc_config in enumerate(bc_config_list):
             # Check required fields
             if "type" not in bc_config:
-                errors.append(f"BC config [{idx}]: missing 'type' field")
+                errors.append("BC config [" + str(idx) + "]: missing 'type' field")
                 continue
             
             bc_type = bc_config["type"]
             
             # Check if type is supported
             if bc_type not in supported_types:
-                errors.append(f"BC config [{idx}]: unsupported type '{bc_type}'")
+                errors.append("BC config [" + str(idx) + "]: unsupported type '" + str(bc_type) + "'")
                 continue
             
             # Check for named_selection
             if "named_selection" not in bc_config:
-                errors.append(f"BC config [{idx}]: missing 'named_selection' field")
+                errors.append("BC config [" + str(idx) + "]: missing 'named_selection' field")
                 continue
             
             ns_name = bc_config["named_selection"]
@@ -93,14 +93,14 @@ class AnalysisManager:
             # Validate named selection exists
             ns = self.ns_manager.get_ns_by_name(ns_name)
             if not ns:
-                warnings.append(f"BC config [{idx}]: named selection '{ns_name}' not found")
+                warnings.append("BC config [" + str(idx) + "]: named selection '" + str(ns_name) + "' not found")
             
             # Type-specific validation
             if bc_type in ["displacement", "remote_displacement"]:
                 if "components" in bc_config:
                     components = bc_config["components"]
                     if not isinstance(components, dict):
-                        errors.append(f"BC config [{idx}]: 'components' must be a dictionary")
+                        errors.append("BC config [" + str(idx) + "]: 'components' must be a dictionary")
         
         return errors, warnings
     
@@ -123,14 +123,14 @@ class AnalysisManager:
         for idx, load_config in enumerate(loads_config_list):
             # Check required fields
             if "type" not in load_config:
-                errors.append(f"Load config [{idx}]: missing 'type' field")
+                errors.append("Load config [" + str(idx) + "]: missing 'type' field")
                 continue
             
             load_type = load_config["type"]
             
             # Check if type is supported
             if load_type not in supported_types:
-                errors.append(f"Load config [{idx}]: unsupported type '{load_type}'")
+                errors.append("Load config [" + str(idx) + "]: unsupported type '" + str(load_type) + "'")
                 continue
             
             # Bolt pretension doesn't require named_selection (automatic)
@@ -139,7 +139,7 @@ class AnalysisManager:
             
             # Check for named_selection for other load types
             if "named_selection" not in load_config:
-                errors.append(f"Load config [{idx}]: missing 'named_selection' field")
+                errors.append("Load config [" + str(idx) + "]: missing 'named_selection' field")
                 continue
             
             ns_name = load_config["named_selection"]
@@ -147,7 +147,7 @@ class AnalysisManager:
             # Validate named selection exists
             ns = self.ns_manager.get_ns_by_name(ns_name)
             if not ns:
-                warnings.append(f"Load config [{idx}]: named selection '{ns_name}' not found")
+                warnings.append("Load config [" + str(idx) + "]: named selection '" + str(ns_name) + "' not found")
             
             # Check use_database flag
             use_database = load_config.get("use_database", False)
@@ -155,11 +155,11 @@ class AnalysisManager:
             # If not using database, check for static values
             if not use_database:
                 if load_type == "force" and "components" not in load_config:
-                    errors.append(f"Load config [{idx}]: force load requires 'components' when not using database")
+                    errors.append("Load config [" + str(idx) + "]: force load requires 'components' when not using database")
                 elif load_type == "moment" and "components" not in load_config:
-                    errors.append(f"Load config [{idx}]: moment load requires 'components' when not using database")
+                    errors.append("Load config [" + str(idx) + "]: moment load requires 'components' when not using database")
                 elif load_type in ["pressure", "temperature"] and "value" not in load_config:
-                    errors.append(f"Load config [{idx}]: {load_type} requires 'value' when not using database")
+                    errors.append("Load config [" + str(idx) + "]: " + str(load_type) + " requires 'value' when not using database")
         
         return errors, warnings
     
@@ -222,48 +222,48 @@ class AnalysisManager:
             ns = self.ns_manager.get_ns_by_name(ns_name) if ns_name else None
             
             if not ns and ns_name:
-                error_msg = f"Named selection '{ns_name}' not found for BC type '{bc_type}'"
+                error_msg = "Named selection '" + str(ns_name) + "' not found for BC type '" + str(bc_type) + "'"
                 self.validation_errors.append(error_msg)
-                print(f"   WARNING: {error_msg}")
+                print("   WARNING: " + str(error_msg))
                 continue
             
             # Apply boundary condition based on type
             try:
                 if bc_type == "fixed_support":
                     self._apply_fixed_support(analysis, ns)
-                    print(f"   Applied Fixed Support at '{ns_name}'")
+                    print("   Applied Fixed Support at '" + str(ns_name) + "'")
                     
                 elif bc_type == "rotation_constraint":
                     self._apply_rotation_constraint(analysis, ns)
-                    print(f"   Applied Rotation Constraint at '{ns_name}'")
+                    print("   Applied Rotation Constraint at '" + str(ns_name) + "'")
                     
                 elif bc_type == "displacement":
                     components = bc_config.get("components", {})
                     self._apply_displacement(analysis, ns, components)
-                    print(f"   Applied Displacement at '{ns_name}'")
+                    print("   Applied Displacement at '" + str(ns_name) + "'")
                     
                 elif bc_type == "remote_displacement":
                     components = bc_config.get("components", {})
                     self._apply_remote_displacement(analysis, ns, components)
-                    print(f"   Applied Remote Displacement at '{ns_name}'")
+                    print("   Applied Remote Displacement at '" + str(ns_name) + "'")
                     
                 elif bc_type == "frictionless_support":
                     self._apply_frictionless_support(analysis, ns)
-                    print(f"   Applied Frictionless Support at '{ns_name}'")
+                    print("   Applied Frictionless Support at '" + str(ns_name) + "'")
                     
                 elif bc_type == "compression_only_support":
                     self._apply_compression_only_support(analysis, ns)
-                    print(f"   Applied Compression Only Support at '{ns_name}'")
+                    print("   Applied Compression Only Support at '" + str(ns_name) + "'")
                     
                 else:
-                    error_msg = f"Unknown boundary condition type: {bc_type}"
+                    error_msg = "Unknown boundary condition type: " + str(bc_type)
                     self.validation_errors.append(error_msg)
-                    print(f"   WARNING: {error_msg}")
+                    print("   WARNING: " + str(error_msg))
                     
             except Exception as e:
-                error_msg = f"Failed to apply BC type '{bc_type}': {str(e)}"
+                error_msg = "Failed to apply BC type '" + str(bc_type) + "': " + str(e)
                 self.validation_errors.append(error_msg)
-                print(f"   ERROR: {error_msg}")
+                print("   ERROR: " + str(error_msg))
     
     def _apply_fixed_support(self, analysis, ns):
         """Apply fixed support boundary condition"""
@@ -450,14 +450,14 @@ class AnalysisManager:
                     self._apply_temperature_load(analysis, load_def, time_steps, load_factors_shifted)
                     
                 else:
-                    error_msg = f"Unknown load type: {load_type}"
+                    error_msg = "Unknown load type: " + str(load_type)
                     self.validation_errors.append(error_msg)
-                    print(f"   WARNING: {error_msg}")
+                    print("   WARNING: " + str(error_msg))
                     
             except Exception as e:
-                error_msg = f"Failed to apply load type '{load_type}': {str(e)}"
+                error_msg = "Failed to apply load type '" + str(load_type) + "': " + str(e)
                 self.validation_errors.append(error_msg)
-                print(f"   ERROR: {error_msg}")
+                print("   ERROR: " + str(error_msg))
     
     def _apply_force_load(self, analysis, load_def, load_config, time_steps, load_factors):
         """Apply force load with X, Y, Z components"""
@@ -466,7 +466,7 @@ class AnalysisManager:
         
         ns = self.ns_manager.get_ns_by_name(ns_name) if ns_name else None
         if not ns:
-            raise Exception(f"Named selection '{ns_name}' not found")
+            raise Exception("Named selection '" + str(ns_name) + "' not found")
         
         force = analysis.AddForce()
         force.Location = ns
@@ -483,7 +483,7 @@ class AnalysisManager:
                         comp_obj.Inputs[0].DiscreteValues = time_steps
                         values = [Quantity(force_value * factor, "N") for factor in load_factors]
                         comp_obj.Output.DiscreteValues = values
-                print(f"   Applied Force at '{ns_name}' (from database)")
+                print("   Applied Force at '" + str(ns_name) + "' (from database)")
             else:
                 raise Exception("Force values not found in load_config")
         else:
@@ -497,7 +497,7 @@ class AnalysisManager:
                     comp_obj.Inputs[0].DiscreteValues = time_steps
                     values = [Quantity(force_value * factor, "N") for factor in load_factors]
                     comp_obj.Output.DiscreteValues = values
-            print(f"   Applied Force at '{ns_name}' (static values)")
+            print("   Applied Force at '" + str(ns_name) + "' (static values)")
     
     def _apply_moment_load(self, analysis, load_def, load_config, time_steps, load_factors):
         """Apply moment load"""
@@ -506,7 +506,7 @@ class AnalysisManager:
         
         ns = self.ns_manager.get_ns_by_name(ns_name) if ns_name else None
         if not ns:
-            raise Exception(f"Named selection '{ns_name}' not found")
+            raise Exception("Named selection '" + str(ns_name) + "' not found")
         
         moment = analysis.AddMoment()
         moment.Location = ns
@@ -522,7 +522,7 @@ class AnalysisManager:
                         comp_obj.Inputs[0].DiscreteValues = time_steps
                         values = [Quantity(moment_value * factor, "N*mm") for factor in load_factors]
                         comp_obj.Output.DiscreteValues = values
-                print(f"   Applied Moment at '{ns_name}' (from database)")
+                print("   Applied Moment at '" + str(ns_name) + "' (from database)")
             else:
                 raise Exception("Moment values not found in load_config")
         else:
@@ -535,7 +535,7 @@ class AnalysisManager:
                     comp_obj.Inputs[0].DiscreteValues = time_steps
                     values = [Quantity(moment_value * factor, "N*mm") for factor in load_factors]
                     comp_obj.Output.DiscreteValues = values
-            print(f"   Applied Moment at '{ns_name}' (static values)")
+            print("   Applied Moment at '" + str(ns_name) + "' (static values)")
     
     def _apply_pressure_load(self, analysis, load_def, load_config, time_steps, load_factors):
         """Apply pressure load"""
@@ -544,7 +544,7 @@ class AnalysisManager:
         
         ns = self.ns_manager.get_ns_by_name(ns_name) if ns_name else None
         if not ns:
-            raise Exception(f"Named selection '{ns_name}' not found")
+            raise Exception("Named selection '" + str(ns_name) + "' not found")
         
         pressure = analysis.AddPressure()
         pressure.Location = ns
@@ -555,7 +555,7 @@ class AnalysisManager:
                 pressure.Magnitude.Output.DiscreteValues = [
                     Quantity(pressure_value * factor, "MPa") for factor in load_factors
                 ]
-                print(f"   Applied Pressure at '{ns_name}' (from database)")
+                print("   Applied Pressure at '" + str(ns_name) + "' (from database)")
             else:
                 raise Exception("Pressure value not found in load_config")
         else:
@@ -563,7 +563,7 @@ class AnalysisManager:
             pressure.Magnitude.Output.DiscreteValues = [
                 Quantity(pressure_value * factor, "MPa") for factor in load_factors
             ]
-            print(f"   Applied Pressure at '{ns_name}' (static value)")
+            print("   Applied Pressure at '" + str(ns_name) + "' (static value)")
     
     def _apply_remote_force_load(self, analysis, load_def, load_config, time_steps, load_factors):
         """Apply remote force load"""
@@ -571,11 +571,11 @@ class AnalysisManager:
         
         ns = self.ns_manager.get_ns_by_name(ns_name) if ns_name else None
         if not ns:
-            raise Exception(f"Named selection '{ns_name}' not found")
+            raise Exception("Named selection '" + str(ns_name) + "' not found")
         
         remote_force = analysis.AddRemoteForce()
         remote_force.Location = ns
-        print(f"   Applied Remote Force at '{ns_name}'")
+        print("   Applied Remote Force at '" + str(ns_name) + "'")
     
     def _apply_bearing_load(self, analysis, load_def, load_config, time_steps, load_factors):
         """Apply bearing load"""
@@ -583,11 +583,11 @@ class AnalysisManager:
         
         ns = self.ns_manager.get_ns_by_name(ns_name) if ns_name else None
         if not ns:
-            raise Exception(f"Named selection '{ns_name}' not found")
+            raise Exception("Named selection '" + str(ns_name) + "' not found")
         
         bearing = analysis.AddBearing()
         bearing.Location = ns
-        print(f"   Applied Bearing Load at '{ns_name}'")
+        print("   Applied Bearing Load at '" + str(ns_name) + "'")
     
     def _apply_temperature_load(self, analysis, load_def, time_steps, load_factors):
         """Apply temperature load"""
@@ -596,12 +596,12 @@ class AnalysisManager:
         
         ns = self.ns_manager.get_ns_by_name(ns_name) if ns_name else None
         if not ns:
-            raise Exception(f"Named selection '{ns_name}' not found")
+            raise Exception("Named selection '" + str(ns_name) + "' not found")
         
         temperature = analysis.AddTemperature()
         temperature.Location = ns
         temperature.Magnitude = Quantity(value, "C")
-        print(f"   Applied Temperature at '{ns_name}'")
+        print("   Applied Temperature at '" + str(ns_name) + "'")
     
     def get_validation_errors(self):
         """Get list of validation errors encountered during configuration"""

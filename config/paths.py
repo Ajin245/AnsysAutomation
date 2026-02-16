@@ -67,7 +67,7 @@ def get_structure_config_path(structure_type, config_path=None):
     Returns:
         str: Full path to structure-specific config file
     """
-    filename = f"structure_{structure_type}_config.json"
+    filename = "structure_" + str(structure_type) + "_config.json"
     return get_config_file_path(filename, config_path=config_path)
 
 def validate_config_path(config_path=None):
