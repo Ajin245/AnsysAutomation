@@ -27,14 +27,17 @@ class StructureDetector:
     }
     
     @staticmethod
-    def detect_structure_type():
+    def detect_structure_type(model):
         """
         Determine structure type from model name patterns
         
+        Args:
+            model: The ANSYS Mechanical model object
+            
         Returns:
             tuple: (structure_type, structure_category)
         """
-        model_name = Model.Name
+        model_name = model.Name
         
         # Try all patterns
         for pattern, category in StructureDetector.STRUCTURE_PATTERNS.items():
@@ -51,14 +54,17 @@ class StructureDetector:
         return "default", "unknown"
     
     @staticmethod
-    def analyze_ns_patterns():
+    def analyze_ns_patterns(model):
         """
         Analyze Named Selections patterns to detect configuration
         
+        Args:
+            model: The ANSYS Mechanical model object
+            
         Returns:
             dict: Analysis results with boolean flags
         """
-        all_ns = [ns.Name for ns in Model.NamedSelections.Children]
+        all_ns = [ns.Name for ns in model.NamedSelections.Children]
         
         analysis = {}
         for ns_type, patterns in StructureDetector.NS_ANALYSIS_PATTERNS.items():
@@ -71,14 +77,17 @@ class StructureDetector:
         return analysis
     
     @staticmethod
-    def detect_load_configuration():
+    def detect_load_configuration(model):
         """
         Detect load configuration based on Named Selections
         
+        Args:
+            model: The ANSYS Mechanical model object
+            
         Returns:
             dict: Load configuration analysis
         """
-        all_ns = [ns.Name for ns in Model.NamedSelections.Children]
+        all_ns = [ns.Name for ns in model.NamedSelections.Children]
         
         load_config = {
             "has_force_load": any(simple_pattern_match(ns, "*force*") for ns in all_ns),
@@ -91,14 +100,17 @@ class StructureDetector:
         return load_config
     
     @staticmethod
-    def detect_boundary_conditions():
+    def detect_boundary_conditions(model):
         """
         Detect boundary conditions based on Named Selections
         
+        Args:
+            model: The ANSYS Mechanical model object
+            
         Returns:
             dict: Boundary conditions analysis
         """
-        all_ns = [ns.Name for ns in Model.NamedSelections.Children]
+        all_ns = [ns.Name for ns in model.NamedSelections.Children]
         
         bc_config = {
             "has_fixed_support": any(simple_pattern_match(ns, "*fixed*") for ns in all_ns),
@@ -112,23 +124,27 @@ class StructureDetector:
         return bc_config
     
     @staticmethod
-    def get_model_info():
+    def get_model_info(model, data_model_object_category):
         """
         Get comprehensive model information
         
+        Args:
+            model: The ANSYS Mechanical model object
+            data_model_object_category: The DataModelObjectCategory object
+            
         Returns:
             dict: Complete model information
         """
         try:
-            geometry = Model.Geometry
-            bodies = geometry.GetChildren(DataModelObjectCategory.Body, True)
+            geometry = model.Geometry
+            bodies = geometry.GetChildren(data_model_object_category.Body, True)
             
             model_info = {
-                "name": Model.Name,
+                "name": model.Name,
                 "bodies_count": len(bodies),
                 "body_names": [body.Name for body in bodies],
-                "named_selections_count": len(Model.NamedSelections.Children),
-                "material_count": len(Model.Materials.Children) if hasattr(Model, 'Materials') else 0
+                "named_selections_count": len(model.NamedSelections.Children),
+                "material_count": len(model.Materials.Children) if hasattr(model, 'Materials') else 0
             }
             
             # Analyze body types
@@ -155,4 +171,4 @@ class StructureDetector:
             
         except Exception as e:
             print("Warning: Could not get complete model info: " + str(e))
-            return {"name": Model.Name, "error": str(e)}
+            return {"name": model.Name, "error": str(e)}

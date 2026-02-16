@@ -30,6 +30,10 @@ class AnsysAutomationApp:
     
     def __init__(self):
         """Initialize the application"""
+        # Get objects from ANSYS global scope at runtime
+        self.model = globals()["Model"]
+        self.data_model_object_category = globals()["DataModelObjectCategory"]
+        
         self.config_manager = None
         self.structure_type = None
         self.structure_category = None
@@ -68,9 +72,9 @@ class AnsysAutomationApp:
             
             # Step 3: Detect structure type
             print("3. Detecting structure type...")
-            self.structure_type, self.structure_category = StructureDetector.detect_structure_type()
-            ns_analysis = StructureDetector.analyze_ns_patterns()
-            model_info = StructureDetector.get_model_info()
+            self.structure_type, self.structure_category = StructureDetector.detect_structure_type(self.model)
+            ns_analysis = StructureDetector.analyze_ns_patterns(self.model)
+            model_info = StructureDetector.get_model_info(self.model, self.data_model_object_category)
             
             print("   Structure: " + self.structure_type + " (" + self.structure_category + ")")
             print("   Model: " + model_info["name"])
