@@ -275,17 +275,79 @@ def run_automated_analysis(model, data_model_object_category):
     app = AnsysAutomationApp(model, data_model_object_category)
     return app.run()
 
+
+def resolve_ansys_context():
+    """Resolve ANSYS context objects using multiple fallback sources."""
+    checked_sources = []
+
+    model_obj = None
+    dmoc_obj = None
+
+    global_scope = globals()
+
+    # Fallback 1 (backward compatibility): objects provided directly in globals().
+    checked_sources.append("globals()['Model']")
+    if "Model" in global_scope:
+        model_obj = global_scope["Model"]
+
+    checked_sources.append("globals()['DataModelObjectCategory']")
+    if "DataModelObjectCategory" in global_scope:
+        dmoc_obj = global_scope["DataModelObjectCategory"]
+
+    # Fallback 2: Model via ExtAPI.DataModel.Project.Model when available.
+    extapi_obj = global_scope.get("ExtAPI")
+    if model_obj is None:
+        checked_sources.append("ExtAPI.DataModel.Project.Model")
+        if extapi_obj is not None:
+            try:
+                project_obj = getattr(getattr(extapi_obj, "DataModel", None), "Project", None)
+                if project_obj is not None:
+                    model_obj = getattr(project_obj, "Model", None)
+            except Exception:
+                model_obj = None
+
+    # Fallback 3: resolve DataModelObjectCategory from available Mechanical API sources.
+    if dmoc_obj is None:
+        checked_sources.append("ExtAPI.DataModelObjectCategory")
+        if extapi_obj is not None:
+            try:
+                dmoc_obj = getattr(extapi_obj, "DataModelObjectCategory", None)
+            except Exception:
+                dmoc_obj = None
+
+    if dmoc_obj is None:
+        checked_sources.append("Model.DataModelObjectCategory")
+        if model_obj is not None:
+            try:
+                dmoc_obj = getattr(model_obj, "DataModelObjectCategory", None)
+            except Exception:
+                dmoc_obj = None
+
+    if dmoc_obj is None:
+        checked_sources.append("DataModelObjectCategory module import")
+        try:
+            from Ansys.Mechanical.DataModel.Enums import DataModelObjectCategory as imported_dmoc
+            dmoc_obj = imported_dmoc
+        except Exception:
+            dmoc_obj = None
+
+    if model_obj is None or dmoc_obj is None:
+        print("CRITICAL: Could not resolve ANSYS context.")
+        print("Checked sources: " + ", ".join(checked_sources))
+        print("Resolved Model: " + str(model_obj is not None) + ", Resolved DataModelObjectCategory: " + str(dmoc_obj is not None))
+        print("Please run this script inside ANSYS Mechanical or provide required context objects.")
+        return None, None, checked_sources
+
+    return model_obj, dmoc_obj, checked_sources
+
 # Main execution
 if __name__ == "__main__":
-    # This allows the script to be run directly in ANSYS
-    # In this context, 'Model' and 'DataModelObjectCategory' are in the global scope
-    try:
-        model_obj = globals()["Model"]
-        dmoc_obj = globals()["DataModelObjectCategory"]
+    # Mechanical entrypoint can expose context through different hosts/APIs,
+    # so we cannot rely only on globals() when scripts are launched in varied runtimes.
+    model_obj, dmoc_obj, _checked_sources = resolve_ansys_context()
+    if model_obj is not None and dmoc_obj is not None:
         success = run_automated_analysis(model_obj, dmoc_obj)
-    except KeyError:
-        print("CRITICAL: Could not find 'Model' or 'DataModelObjectCategory' in the global scope.")
-        print("Please ensure this script is run within the ANSYS Mechanical scripting environment.")
+    else:
         success = False
     
     if success:
